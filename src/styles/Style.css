@@ -1,0 +1,35 @@
+.error {
+    color: red;
+    background: lightgray;
+    font-size: 50px;
+    border: black solid;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.success {
+    color: green;
+    background: lightgray;
+    font-size: 50px;
+    border: black solid;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.blog_container{
+	width: 100%;
+	font-size: small;
+	border: 1px black solid;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.remove_button {
+	background-color: red;
+	border-radius: 10px;
+}
+
+
+
