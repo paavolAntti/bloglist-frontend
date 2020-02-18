@@ -48,7 +48,7 @@ const AddPostForm = ({ handlePost }) => {
 					onChange={ ({ target }) => setUrl(target.value) }
 				/>
 			</div>
-			<button type='submit'> post </button>
+			<button type='submit' id='post_button'> post </button>
 		</form>
 	)
 }

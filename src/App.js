@@ -49,7 +49,7 @@ const App = () => {
 			console.log('logging in with', username, password)
 		} catch (exception) {
 			setNoteStyle('error')
-			setNotification('invalid username of password')
+			setNotification('invalid username or password')
 			setTimeout(() => {
 				setNotification(null)
 			}, 2500)
@@ -92,6 +92,7 @@ const App = () => {
 			<Notification message={notification} style={noteStyle} />
 			<div>
 			username: <input
+					id='username'
 					type='text'
 					value={username}
 					name='Username'
@@ -100,13 +101,14 @@ const App = () => {
 			</div>
 			<div>
 			password: <input
+					id='password'
 					type='text'
 					value={password}
 					name='Password'
 					onChange={ ({ target }) => setPassword(target.value)}
 				/>
 			</div>
-			<button type='submit'>login</button>
+			<button type='submit' id='login_button'>login</button>
 		</form>
 	)
 	const postFormRef = React.createRef()
@@ -151,10 +153,11 @@ const App = () => {
 			<Notification message={notification} style={noteStyle} />
 			<div>
 				{user.name} logged in
-				<button onClick={handleLogout}>logout</button>
+				<button onClick={handleLogout} id='logout_button'>logout</button>
 			</div>
-			<br></br>
-			{showSortedBlogs()}
+			<div id='bloglist'>
+				{showSortedBlogs()}
+			</div>
 		</div>
 	)
 

@@ -85,11 +85,12 @@ describe ('<Blog />', () => {
 			urlInput, { target: { value: 'test url' } }
 		)
 		fireEvent.submit(form)
-		expect(mockHandler.mock.calls.length).toBe(1)
-		console.log(mockHandler.mock.calls[0][0])
-		expect(mockHandler.mock.calls[0][0].title).toBe('test title')
-		expect(mockHandler.mock.calls[0][0].author).toBe('test author')
-		expect(mockHandler.mock.calls[0][0].url).toBe('test url')
+		const mockCalls = mockHandler.mock.calls
+		expect(mockCalls.length).toBe(1)
+
+		expect(mockCalls[0][0].title).toBe('test title')
+		expect(mockCalls[0][0].author).toBe('test author')
+		expect(mockCalls[0][0].url).toBe('test url')
 	})
 })
 

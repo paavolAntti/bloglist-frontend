@@ -23,7 +23,7 @@ const Blog = ({ blog, user, refreshHandler, handleLike, handleDelete }) => {
 			<div>{blog.url}</div>
 			<div>
 				likes: {likes}
-				<button onClick={ () => {setLikes(likes + 1); handleLike(blog, likes)  } }>like</button>
+				<button onClick={ () => {setLikes(likes + 1); handleLike(blog, likes)  } } id='like_button'>like</button>
 			</div>
 			<div>{blog.user.name}</div>
 		</div>
@@ -34,11 +34,11 @@ const Blog = ({ blog, user, refreshHandler, handleLike, handleDelete }) => {
 		<div className='blog_container'>
 			<div>
 				{basicInfo}
-				<button onClick={ toggleVisibility } style={hideWhenVisible}> view </button>
-				<button onClick={ () =>  { toggleVisibility(); refreshHandler() } } style={showWhenVisible}> hide </button>
+				<button onClick={ toggleVisibility } style={hideWhenVisible} id='view_button'> view </button>
+				<button onClick={ () =>  { toggleVisibility(); refreshHandler() } } style={showWhenVisible} id='hide_button'> hide </button>
 				<div style= {showWhenVisible} className='hidden_content'>
 					{ allInfo }
-					{ user.username === blog.user.username && <button className='remove_button' onClick={ () => { handleDelete(blog, user, refreshHandler)} }> remove </button> }
+					{ user.username === blog.user.username && <button className='remove_button' id='remove_button' onClick={ () => { handleDelete(blog, user, refreshHandler)} }> remove </button> }
 				</div>
 			</div>
 		</div>
