@@ -6,7 +6,7 @@ const AddPostForm = ({ handlePost }) => {
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
 
-	const addPost = (event) => {
+	const addPost = async (event) => {
 		event.preventDefault()
 		handlePost({
 			title: title,

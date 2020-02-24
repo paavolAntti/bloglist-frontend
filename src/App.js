@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -8,20 +8,20 @@ import AddPostForm from './components/AddPostForm'
 import Togglable from './components/Togglable'
 import handlers from './helpers/handlers'
 import { setNotification } from './reducers/notificationReducer'
+import { initialize, createNew } from './reducers/blogReducer'
 
 const App = () => {
-	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] =  useState(null)
 	const [noteStyle, setNoteStyle] = useState('')
+
 	const dispatch = useDispatch()
+	const blogs = useSelector(state => state.blogs)
 
 	useEffect(() => {
-		blogService.getAll().then(blogs =>
-			setBlogs( blogs )
-		)
-	}, [])
+		dispatch(initialize())
+	}, [dispatch])
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -30,10 +30,12 @@ const App = () => {
 			setUser(user)
 		}
 	}, [])
+	const createNewBlog = (blogObject) => {
+		dispatch(createNew(blogObject))
+	}
 
-	const refreshBlogs = async () => {
-		const blogs = await blogService.getAll()
-		setBlogs(blogs)
+	const refreshBlogs = () => {
+		dispatch(initialize())
 	}
 
 	const notify = (message) => {
@@ -70,13 +72,10 @@ const App = () => {
 		postFormRef.current.toggleVisibility()
 		try {
 			blogService.setToken(user.token)
-			await blogService.postNew({
-				title: blogObject.title,
-				author: blogObject.author,
-				url: blogObject.url })
 			setNoteStyle('success')
+			console.log('user:', blogObject.user)
+			createNewBlog(blogObject)
 			notify(`${blogObject.title} by ${blogObject.author} added to bloglist`)
-			refreshBlogs()
 		} catch (exception) {
 			setNoteStyle('error')
 			notify(exception.message)
@@ -118,21 +117,10 @@ const App = () => {
 			/>
 		</Togglable>
 	)
-	const showSortedBlogs = () => {
-		let blogsToSort = [...blogs]
-		blogsToSort.sort((a, b) => {
-			let likesA = a.likes
-			let likesB = b.likes
-
-			if (likesA > likesB) {
-				return -1
-			} else if (likesA < likesB) {
-				return 1
-			}
-			return 0
-		})
+	const showBlogs = () => {
 		return (
-			blogsToSort.map(blog =>
+			blogs.map(blog =>
+
 				<Blog
 					key={blog.id}
 					blog={blog}
@@ -154,7 +142,7 @@ const App = () => {
 				<button onClick={handleLogout} id='logout_button'>logout</button>
 			</div>
 			<div id='bloglist'>
-				{showSortedBlogs()}
+				{showBlogs()}
 			</div>
 		</div>
 	)

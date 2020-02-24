@@ -1,6 +1,6 @@
 import React from 'react'
 import '../styles/Style.css'
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 
 
 const Notification = ({ style }) => {

@@ -22,7 +22,7 @@ const postNew = async newPost => {
 
 const updateBlog = async (id, blogToUpdate) => {
 	const response = await axios.put(`${baseUrl}/${id}`, blogToUpdate)
-	return response
+	return response.data
 }
 
 const removeBlog = async (id, currentToken) => {
