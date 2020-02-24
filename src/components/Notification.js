@@ -1,15 +1,17 @@
 import React from 'react'
 import '../styles/Style.css'
+import {useSelector} from 'react-redux'
 
 
-const Notification = ({ message, style }) => {
-	if (message === null) {
+const Notification = ({ style }) => {
+	const notification = useSelector(state => state.notification)
+	if (notification === null) {
 		return null
 	}
 
 	return (
 		<div className={style} id='notification'>
-			{message}
+			{notification.message}
 		</div>
 	)
 }

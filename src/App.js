@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -6,14 +7,15 @@ import loginService from './services/login'
 import AddPostForm from './components/AddPostForm'
 import Togglable from './components/Togglable'
 import handlers from './helpers/handlers'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] =  useState(null)
-	const [notification, setNotification] = useState('')
 	const [noteStyle, setNoteStyle] = useState('')
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		blogService.getAll().then(blogs =>
@@ -34,6 +36,11 @@ const App = () => {
 		setBlogs(blogs)
 	}
 
+	const notify = (message) => {
+		console.log('message: ', message)
+		dispatch(setNotification(message, 5))
+	}
+
 	const handleLogin = async (event) => {
 		event.preventDefault()
 		try {
@@ -49,10 +56,7 @@ const App = () => {
 			console.log('logging in with', username, password)
 		} catch (exception) {
 			setNoteStyle('error')
-			setNotification('invalid username or password')
-			setTimeout(() => {
-				setNotification(null)
-			}, 2500)
+			notify('invalid username or password')
 			console.error(exception.message)
 		}
 	}
@@ -71,17 +75,11 @@ const App = () => {
 				author: blogObject.author,
 				url: blogObject.url })
 			setNoteStyle('success')
-			setNotification(`${blogObject.title} by ${blogObject.author} added to bloglist`)
-			setTimeout(() => {
-				setNotification(null)
-			}, 2500)
+			notify(`${blogObject.title} by ${blogObject.author} added to bloglist`)
 			refreshBlogs()
 		} catch (exception) {
 			setNoteStyle('error')
-			setNotification(exception.message)
-			setTimeout(() => {
-				setNotification(null)
-			}, 2500)
+			notify(exception.message)
 			console.error(exception)
 		}
 	}
@@ -89,7 +87,7 @@ const App = () => {
 	const loginForm = () => (
 		<form onSubmit={handleLogin}>
 			<h1>login</h1>
-			<Notification message={notification} style={noteStyle} />
+			<Notification style={noteStyle} />
 			<div>
 			username: <input
 					id='username'
@@ -150,7 +148,7 @@ const App = () => {
 	const showPosts = () => (
 		<div>
 			<h1>blogs</h1>
-			<Notification message={notification} style={noteStyle} />
+			<Notification style={noteStyle} />
 			<div>
 				{user.name} logged in
 				<button onClick={handleLogout} id='logout_button'>logout</button>
