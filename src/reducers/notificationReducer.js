@@ -1,11 +1,12 @@
 let timeoutID
 
-export const setNotification = (message, freezetime) => {
+export const setNotification = (message, freezetime, style) => {
 	return async dispatch => {
 		dispatch({
 			type: 'NOTE',
 			data: {
-				message: message
+				message: message,
+				style: style
 			}
 		})
 		clearTimeout(timeoutID)

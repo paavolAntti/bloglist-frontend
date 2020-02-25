@@ -3,21 +3,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import AddPostForm from './components/AddPostForm'
 import Togglable from './components/Togglable'
 import handlers from './helpers/handlers'
 import { setNotification } from './reducers/notificationReducer'
 import { initialize, createNew } from './reducers/blogReducer'
+import { loginUser, logoutUser, setUser } from './reducers/loginReducer'
 
 const App = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
-	const [user, setUser] =  useState(null)
-	const [noteStyle, setNoteStyle] = useState('')
 
 	const dispatch = useDispatch()
 	const blogs = useSelector(state => state.blogs)
+	const user = useSelector(state => state.user)
 
 	useEffect(() => {
 		dispatch(initialize())
@@ -26,10 +25,11 @@ const App = () => {
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
 		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON)
-			setUser(user)
+			const userToLog = JSON.parse(loggedUserJSON)
+			dispatch(setUser(userToLog))
+
 		}
-	}, [])
+	}, [dispatch])
 	const createNewBlog = (blogObject) => {
 		dispatch(createNew(blogObject))
 	}
@@ -38,55 +38,40 @@ const App = () => {
 		dispatch(initialize())
 	}
 
-	const notify = (message) => {
+	const notify = (message, style) => {
 		console.log('message: ', message)
-		dispatch(setNotification(message, 5))
+		dispatch(setNotification(message, 5, style))
 	}
-
-	const handleLogin = async (event) => {
+	const login = (event) => {
 		event.preventDefault()
-		try {
-			const userToLogin= await loginService.login({
-				username,password,
-			})
-			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(userToLogin))
-			blogService.setToken(userToLogin.token)
-			console.log(username)
-			setUser(userToLogin)
-			setUsername('')
-			setPassword('')
-			console.log('logging in with', username, password)
-		} catch (exception) {
-			setNoteStyle('error')
-			notify('invalid username or password')
-			console.error(exception.message)
-		}
+		dispatch(loginUser({ username, password }))
+		setUsername('')
+		setPassword('')
+		console.log('user at login:', user)
 	}
-
 
 	const handleLogout =  () => {
-		window.localStorage.removeItem('loggedBlogappUser')
-		setUser(null)
+		//window.localStorage.removeItem('loggedBlogappUser')
+		console.log('user:', user)
+		dispatch(logoutUser())
 	}
 	const handlePost = async (blogObject) => {
 		postFormRef.current.toggleVisibility()
 		try {
 			blogService.setToken(user.token)
-			setNoteStyle('success')
 			console.log('user:', blogObject.user)
 			createNewBlog(blogObject)
-			notify(`${blogObject.title} by ${blogObject.author} added to bloglist`)
+			notify(`${blogObject.title} by ${blogObject.author} added to bloglist`, 'success')
 		} catch (exception) {
-			setNoteStyle('error')
-			notify(exception.message)
+			notify(exception.message, 'error')
 			console.error(exception)
 		}
 	}
 
 	const loginForm = () => (
-		<form onSubmit={handleLogin}>
+		<form onSubmit={login}>
 			<h1>login</h1>
-			<Notification style={noteStyle} />
+			<Notification />
 			<div>
 			username: <input
 					id='username'
@@ -136,7 +121,7 @@ const App = () => {
 	const showPosts = () => (
 		<div>
 			<h1>blogs</h1>
-			<Notification style={noteStyle} />
+			<Notification />
 			<div>
 				{user.name} logged in
 				<button onClick={handleLogout} id='logout_button'>logout</button>
