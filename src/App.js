@@ -5,10 +5,12 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import AddPostForm from './components/AddPostForm'
 import Togglable from './components/Togglable'
-import handlers from './helpers/handlers'
+//import handlers from './helpers/handlers'
+import Menu from './components/Menu'
 import { setNotification } from './reducers/notificationReducer'
 import { initialize, createNew } from './reducers/blogReducer'
 import { loginUser, logoutUser, setUser } from './reducers/loginReducer'
+
 
 const App = () => {
 	const [username, setUsername] = useState('')
@@ -30,12 +32,9 @@ const App = () => {
 
 		}
 	}, [dispatch])
+
 	const createNewBlog = (blogObject) => {
 		dispatch(createNew(blogObject))
-	}
-
-	const refreshBlogs = () => {
-		dispatch(initialize())
 	}
 
 	const notify = (message, style) => {
@@ -110,9 +109,6 @@ const App = () => {
 					key={blog.id}
 					blog={blog}
 					user={user}
-					refreshHandler={refreshBlogs}
-					handleLike={handlers.handleLike}
-					handleDelete={handlers.handleDelete}
 				/>
 			)
 		)
@@ -137,6 +133,7 @@ const App = () => {
 			<div>
 				{user === null && loginForm()}
 				{user !== null && showPosts()}
+				<Menu/>
 				{user !== null && postForm()}
 			</div>
 
