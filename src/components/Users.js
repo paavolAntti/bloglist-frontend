@@ -1,30 +1,24 @@
-import React, { useEffect } from 'react'
-import { getUsers } from '../reducers/userReducer'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-const User = ({ user }) => {
+
+const SingleUser = ({ user }) => {
 	console.log('user at USER component')
 	return (
 		<tr>
-			<td>{user.name}</td>
+			<td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
 			<td>{user.blogs.length}</td>
 		</tr>
 	)
 
 }
 
-const Users = () => {
-	const dispatch = useDispatch()
+const Users = ({ users }) => {
 
-	useEffect(() => {
-		dispatch(getUsers())
-	}, [dispatch])
-
-	const users = useSelector(state => state.userlist)
 	const showAll = () => {
 		return (
 			users.map(u =>
-				<User key={u.id}
+				<SingleUser key={u.id}
 					user={u} />
 			)
 		)

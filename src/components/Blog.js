@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { like, remove } from '../reducers/blogReducer'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 
 const Blog = ({ blog, user }) => {
@@ -42,12 +43,13 @@ const Blog = ({ blog, user }) => {
 	const basicInfo = `${blog.title} / ${blog.author}`
 	const allInfo = (
 		<div>
-			<div>{blog.url}</div>
+			<h2>{blog.title} {blog.author}</h2>
+			<a href={blog.url}>{blog.url}</a>
 			<div>
 				likes: {blog.likes}
 				<button onClick={ likeBlog } id='like_button'>like</button>
 			</div>
-			<div>{blog.user.name}</div>
+			<div>added by {blog.user.name}</div>
 		</div>
 
 	)
@@ -56,7 +58,7 @@ const Blog = ({ blog, user }) => {
 		<div className='blog_container'>
 			<div>
 				{showprops()}
-				{basicInfo}
+				<Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
 				<button onClick={ toggleVisibility } style={hideWhenVisible} id='view_button'> view </button>
 				<button onClick={ () =>  { toggleVisibility()} } style={showWhenVisible} id='hide_button'> hide </button>
 				<div style= {showWhenVisible} className='hidden_content'>

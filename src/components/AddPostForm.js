@@ -1,10 +1,31 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { createNew } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const AddPostForm = ({ handlePost }) => {
-
+const AddPostForm = ( { postFormRef, user }) => {
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
+
+	const dispatch = useDispatch()
+
+	const createNewBlog = (blogObject) => {
+		dispatch(createNew(blogObject))
+	}
+	const handlePost = async (blogObject) => {
+		postFormRef.current.toggleVisibility()
+		try {
+			blogService.setToken(user.token)
+			console.log('user:', blogObject.user)
+			createNewBlog(blogObject)
+			dispatch(setNotification(`${blogObject.title} by ${blogObject.author} added to bloglist`, 5, 'success'))
+		} catch (exception) {
+			dispatch(setNotification(exception.message, 'error'))
+			console.error(exception)
+		}
+	}
 
 	const addPost = async (event) => {
 		event.preventDefault()
