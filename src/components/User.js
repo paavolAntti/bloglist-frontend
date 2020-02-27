@@ -1,5 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
 
 const User = ({ users }) => {
 	const id = useParams().id
@@ -12,9 +14,9 @@ const User = ({ users }) => {
 	const showAll = () => {
 		return (
 			user.blogs.map(blog =>
-				<li key={blog.id}>
+				<ListItem key={blog.id}>
 					{blog.title}
-				</li>
+				</ListItem>
 			)
 		)
 	}
@@ -24,9 +26,9 @@ const User = ({ users }) => {
 			<h2>{user.name}</h2>
 			<div>
 				<h3>added blogs</h3>
-				<ul>
+				<List>
 					{showAll()}
-				</ul>
+				</List>
 			</div>
 		</div>
 	)

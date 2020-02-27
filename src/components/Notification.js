@@ -1,6 +1,6 @@
 import React from 'react'
-import '../styles/Style.css'
 import { useSelector } from 'react-redux'
+import { Alert } from '@material-ui/lab'
 
 
 const Notification = () => {
@@ -10,8 +10,11 @@ const Notification = () => {
 	}
 
 	return (
-		<div className={notification.style} id='notification'>
-			{notification.message}
+		<div>
+			{(notification.message &&
+			<Alert severity={notification.style}>
+				{notification.message}
+			</Alert>)}
 		</div>
 	)
 }

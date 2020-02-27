@@ -10,6 +10,7 @@ export const getUsers = () => {
 	}
 }
 
+
 const userReducer = (state = [], action) => {
 	switch (action.type) {
 	case 'ALL':

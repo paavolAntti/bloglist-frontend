@@ -1,14 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {
+	Table,
+	TableBody,
+	TableContainer,
+	Paper,
+	TableCell,
+	TableRow
+} from '@material-ui/core'
 
 
 const SingleUser = ({ user }) => {
 	console.log('user at USER component')
 	return (
-		<tr>
-			<td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
-			<td>{user.blogs.length}</td>
-		</tr>
+		<TableRow>
+			<TableCell><Link to={`/users/${user.id}`}>{user.name}</Link></TableCell>
+			<TableCell>{user.blogs.length}</TableCell>
+		</TableRow>
 	)
 
 }
@@ -27,17 +35,21 @@ const Users = ({ users }) => {
 	return (
 		<div>
 			<h2>Users</h2>
-			<table>
-				<thead>
-					<tr>
-						<td></td>
-						<th>blogs created</th>
-					</tr>
-				</thead>
-				<tbody>
-					{showAll()}
-				</tbody>
-			</table>
+			<TableContainer component={Paper}>
+				<Table>
+					<TableBody>
+						<TableRow>
+							<TableCell>
+								user
+							</TableCell>
+							<TableCell>
+								blogs created
+							</TableCell>
+						</TableRow>
+						{showAll()}
+					</TableBody>
+				</Table>
+			</TableContainer>
 		</div>
 	)
 }

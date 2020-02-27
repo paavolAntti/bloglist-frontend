@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { leaveComment } from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
+import { TextField, Button } from '@material-ui/core'
 
 const CommentForm = ({ blog }) => {
 	const [comment, setComment] = useState('')
@@ -23,14 +24,15 @@ const CommentForm = ({ blog }) => {
 	return (
 		<form onSubmit={addComment}>
 			<div>
-				<input
+				<TextField
+					label='add your comment'
 					id='comment'
 					type='text'
 					value={comment}
 					name='Comment'
 					onChange={ ({ target }) => setComment(target.value)}
 				/>
-				<button type='submit' id='comment_button'>add comment</button>
+				<Button variant='contained' color='default' type='submit' id='comment_button'>comment</Button>
 			</div>
 		</form>
 	)

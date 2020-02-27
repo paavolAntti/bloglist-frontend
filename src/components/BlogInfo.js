@@ -3,6 +3,17 @@ import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { like, remove } from '../reducers/blogReducer'
 import CommentForm from './CommentForm'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import {
+	Table,
+	TableBody,
+	TableContainer,
+	Paper,
+	TableCell,
+	TableRow,
+	Button
+} from '@material-ui/core'
 
 
 const BlogInfo = ({ blogs, user }) => {
@@ -40,9 +51,9 @@ const BlogInfo = ({ blogs, user }) => {
 		return (
 			blog.comments
 				.map(c =>
-					<li key={getId()}>
+					<ListItem key={getId()}>
 						{c}
-					</li>)
+					</ListItem>)
 		)
 	}
 
@@ -53,19 +64,46 @@ const BlogInfo = ({ blogs, user }) => {
 	return (
 		<div>
 			<h2>{blog.title} {blog.author}</h2>
-			<a href={blog.url}>{blog.url}</a>
+			<TableContainer component={Paper}>
+				<Table>
+					<TableBody>
+						<TableRow>
+							<TableCell>
+								more info at
+							</TableCell>
+							<TableCell>
+								<a href={blog.url}>{blog.url}</a>
+							</TableCell>
+						</TableRow>
+						<TableRow>
+							<TableCell>
+								blog likes
+							</TableCell>
+							<TableCell>
+								{blog.likes}
+								<Button variant='text' color='primary' onClick={ likeBlog } id='like_button'>like</Button>
+							</TableCell>
+						</TableRow>
+						<TableRow>
+							<TableCell>
+								added by
+							</TableCell>
+							<TableCell>
+								{blog.user.name}
+							</TableCell>
+						</TableRow>
+					</TableBody>
+				</Table>
+			</TableContainer>
 			<div>
-				likes: {blog.likes}
-				<button onClick={ likeBlog } id='like_button'>like</button>
+				{ user.username === blog.user.username && <Button variant='contained' color='secondary' onClick={ removeBlog }> remove </Button> }
 			</div>
-			<div>added by {blog.user.name}</div>
-			{ user.username === blog.user.username && <button className='remove_button' id='remove_button' onClick={ removeBlog }> remove </button> }
 			<div>
 				<h3>comments</h3>
 				<CommentForm blog={blog} />
-				<ul>
+				<List>
 					{comments()}
-				</ul>
+				</List>
 			</div>
 		</div>
 	)

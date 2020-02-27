@@ -10,6 +10,7 @@ import BlogInfo from './BlogInfo'
 import Togglable from './Togglable'
 import AddPostForm from './AddPostForm'
 import Notification from './Notification'
+import { AppBar, Toolbar, Button } from '@material-ui/core'
 
 const Menu = (props) => {
 	const dispatch = useDispatch()
@@ -30,21 +31,25 @@ const Menu = (props) => {
 		</Togglable>
 	)
 
-	const padding = {
-		paddingRight: 5
-	}
-
 	return (
 		<div>
 			<Router>
+				<AppBar position='static'>
+					<Toolbar>
+						<Button color='inherit' component={Link} to='/'>
+							blogs
+						</Button>
+						<Button color='inherit' component={Link} to='/users'>
+							users
+						</Button>
+						<Button color='inherit' onClick={handleLogout}>
+							log out
+						</Button>
+						{props.user.name} logged in
+					</Toolbar>
+				</AppBar>
 				<div>
-					<Link style={padding} to='/'>blogs</Link>
-					<Link style={padding} to='/users'>users</Link>
-					{props.user.name} logged in
-					<button onClick={handleLogout} id='logout_button'>logout</button>
-				</div>
-				<div>
-					<h1>blogs</h1>
+					<h1>BLOG APP</h1>
 					<Notification />
 				</div>
 				<Switch>

@@ -1,5 +1,7 @@
 /* eslint-disable no-case-declarations */
 import blogService from '../services/blogs'
+import { setNotification } from './notificationReducer'
+import { getUsers } from './userReducer'
 
 export const initialize = () => {
 	return async dispatch => {
@@ -13,17 +15,25 @@ export const initialize = () => {
 
 export const createNew = (content) => {
 	return async dispatch => {
-		await blogService.postNew({
-			title: content.title,
-			author: content.author,
-			url: content.url,
-			likes: 0
-		})
+		try {
+			await blogService.postNew({
+				title: content.title,
+				author: content.author,
+				url: content.url,
+				likes: 0
+			})
+			dispatch(setNotification(`${content.title} by ${content.author} added to bloglist`, 5, 'success'))
+		} catch (exception) {
+			if (exception.message === 'Request failed with status code 400') {
+				dispatch(setNotification('invalid blog post', 5, 'error'))
+			}
+		}
 		const updatedBlogs = await blogService.getAll()
 		dispatch({
 			type: 'NEW',
 			data: updatedBlogs
 		})
+		dispatch(getUsers())
 	}
 }
 
