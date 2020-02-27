@@ -2,6 +2,7 @@ import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { like, remove } from '../reducers/blogReducer'
+import CommentForm from './CommentForm'
 
 
 const BlogInfo = ({ blogs, user }) => {
@@ -9,6 +10,8 @@ const BlogInfo = ({ blogs, user }) => {
 	const history = useHistory()
 	const id = useParams().id
 	const blog = blogs.find(b => b.id === id)
+
+	const getId = () => (100000 * Math.random()).toFixed(0)
 
 	const likeBlog = () => {
 		console.log('blog id: ', blog.id)
@@ -29,6 +32,20 @@ const BlogInfo = ({ blogs, user }) => {
 		history.push('/')
 	}
 
+	const comments = () => {
+		if (!blog.comments) {
+			return null
+		}
+		console.log(blog.comments)
+		return (
+			blog.comments
+				.map(c =>
+					<li key={getId()}>
+						{c}
+					</li>)
+		)
+	}
+
 	if(!blog) {
 		return null
 	}
@@ -43,6 +60,13 @@ const BlogInfo = ({ blogs, user }) => {
 			</div>
 			<div>added by {blog.user.name}</div>
 			{ user.username === blog.user.username && <button className='remove_button' id='remove_button' onClick={ removeBlog }> remove </button> }
+			<div>
+				<h3>comments</h3>
+				<CommentForm blog={blog} />
+				<ul>
+					{comments()}
+				</ul>
+			</div>
 		</div>
 	)
 }

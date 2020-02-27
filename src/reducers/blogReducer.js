@@ -37,6 +37,17 @@ export const like = (id, blogToUpdate) => {
 	}
 }
 
+export const leaveComment = (id, blogToUpdate) => {
+	return async dispatch => {
+		await blogService.commentBlog(id, blogToUpdate)
+		const updatedBlogs = await blogService.getAll()
+		dispatch({
+			type: 'COMMENT',
+			data: updatedBlogs
+		})
+	}
+}
+
 export const remove = (id, token) => {
 	return async dispatch => {
 		const removed = await blogService.removeBlog(id, token)
@@ -80,6 +91,8 @@ const blogReducer = (state = [], action) => {
 		}
 		const updatedBlogs = state.map(b => b.id !== id ? b : likedBLog)
 		return sortBLogs(updatedBlogs)
+	case 'COMMENT':
+		return sortBLogs(action.data)
 	case 'REMOVE':
 		const removedId = action.data.id
 		const updateBlogs = state.filter(b => b.id !== removedId)
